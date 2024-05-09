@@ -32,7 +32,7 @@ const loginUser = async (req,res) =>{
         const { email, password, userName } = req.body;
         let userExist = await authModel.findOne({email : req.body.email});
         if(!userExist){
-            res.json({message : "User not found",status : false});
+            res.json({message : "User not found, Please try again.",status : false});
         }
         else{
             bcrypt.compare(req.body.password, userExist.password,(err,data)=>{
