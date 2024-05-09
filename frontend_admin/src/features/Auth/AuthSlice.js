@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginAPI } from "./AuthAPI";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { loginAPI , signOut } from "./AuthAPI";
 
 const initialState = {
     userInfo: {},
@@ -9,6 +9,11 @@ const initialState = {
 
 export const loginAsync = createAsyncThunk('user/loginAPI',async(data)=>{
     const response = await loginAPI(data);
+    return response.data;
+})
+
+export const signOutAsync = createAction('user/signOut',async(userId)=>{
+    const response = await signOut(userId);
     return response.data;
 })
 
@@ -30,6 +35,9 @@ export const authSlice = createSlice({
             state.error = false;
             state.success = true;
             state.loading = false;
+        })
+        .addCase(signOutAsync,(state)=>{
+            Object.assign(state, initialState);
         })
     }
 })

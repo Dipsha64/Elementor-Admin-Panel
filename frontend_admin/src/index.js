@@ -8,12 +8,13 @@ import { store, persistor } from './store/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import Protected from "./store/Protected";
+import Home from './page/Home';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route>
+    <Route path='/' element={<App/>}>
       <Route path='adminLogin' element={<Login/>}></Route>
-      <Route path='/' element={<Protected><App/></Protected>}></Route>
+      <Route index element={<Protected><Home/></Protected>}></Route>
     </Route>
   )
 )

@@ -7,3 +7,14 @@ export function loginAPI (data) {
         resolve(result);
     })
 }
+
+export function signOut() {
+    return new Promise(async(resolve,reject)=>{
+        try{
+            resolve({data : 'Successfully Logout'});
+        }
+        catch(error){
+            reject(error);
+        }
+    })
+}
