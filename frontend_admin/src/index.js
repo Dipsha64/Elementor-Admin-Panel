@@ -9,12 +9,16 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import Protected from "./store/Protected";
 import Home from './page/Home';
+import IconListing from './page/IconModule/IconListing';
+import UploadIcon from './page/IconModule/UploadIcon';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App/>}>
       <Route path='adminLogin' element={<Login/>}></Route>
       <Route index element={<Protected><Home/></Protected>}></Route>
+      <Route path='icons' element={<Protected><IconListing/></Protected>}></Route>
+      <Route path='upload' element={<UploadIcon/>}></Route>
     </Route>
   )
 )

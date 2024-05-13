@@ -40,9 +40,7 @@ function Login() {
         draggable : true
     }
     const loginSubmit = (data) =>{
-        console.log("DATAAA", data);
         dispatch(loginAsync(data)).then((res)=>{
-            console.log("RESSS",res.payload.status);
             if(res.payload && res.payload.status === true){
                 navigate("/");
             }

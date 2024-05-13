@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
-import { BsFillCartFill } from "react-icons/bs";
 import { useState } from "react";
 import { signOutAsync } from "../features/Auth/AuthSlice";
 import { useDispatch } from "react-redux";
@@ -19,7 +18,7 @@ function Header() {
         navigate("/adminLogin");
     }
     return ( 
-        <header className="h-32 w-full px-2 md:px-4">
+        <header className="h-20 w-full px-2 md:px-4 bg-gradient-to-r from-indigo-400">
             <div className="flex items-center h-full justify-between">
                 <Link to={"/"}>
                     <div className="h-full pl-32">
@@ -27,21 +26,17 @@ function Header() {
                     </div>
                 </Link>
                 <div className="flex items-center gap-4 md:gap-7">
-                    <nav className="flex gap-4 md:gap-6 text-base md:text-lg">
-                        <Link to={""}>Home</Link>
-                        <Link to={"menu"}>Icon</Link>
+                    <nav className="flex gap-4 md:gap-6 text-2xl md:text-2xl text-indigo-600">
+                        <Link to={"/"}>Home</Link>
+                        <Link to={"/icons"}>Icon</Link>
                         <Link to={"contact"}>Contact</Link>
                     </nav>
-                    <div className="text-2xl relative">
-                        <BsFillCartFill/>
-                        <div className="absolute -top-1 -right-1 text-white bg-red-500 h-4 w-4 text-sm text-center w-4 m-0 p-0 rounded-full">0</div>
-                    </div>
                     <div className="text-slate-900" onClick={handleMenu}>
                         <div className="text-2xl border-2 border-solid border-slate-600 p-1 cursor-pointer rounded-full">
                             <FaUser />
                         </div>
                         { showMenu && 
-                            <div className="absolute right-3 bg-white py-3 px-2 shadow drop-shadow-md flex flex-col" onClick={handleLogout}>
+                            <div className="absolute right-3 bg-white py-3 px-2 shadow drop-shadow-md flex flex-col text-indigo-600" onClick={handleLogout}>
                                 <span className="whitespace-nowrap cursor-pointer">Logout</span>
                             </div>
                         }
