@@ -26,7 +26,7 @@ function Header() {
                     </div>
                 </Link>
                 <div className="flex items-center gap-4 md:gap-7">
-                    <nav className="flex gap-4 md:gap-6 text-2xl md:text-2xl text-indigo-600">
+                    <nav className="flex gap-4 md:gap-6 text-2xl md:text-2xl text-indigo-600 font-semibold">
                         <Link to={"/"}>Home</Link>
                         <Link to={"/icons"}>Icon</Link>
                         <Link to={"contact"}>Contact</Link>

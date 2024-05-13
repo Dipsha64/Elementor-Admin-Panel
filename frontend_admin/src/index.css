@@ -19,24 +19,30 @@ code {
 }
 
 * {
-  font-family: "Jersey 15", sans-serif;
+  font-family: "Overpass", sans-serif;
 }
 
 p {
-  font-family: "Jersey 15", sans-serif;
+  font-family: "Overpass", sans-serif;
   font-size: 40px;
   font-weight: 400;
   line-height: 50px;
 }
 
 h1 {
-  font-family: "Jersey 15", sans-serif;
+  font-family: "Overpass", sans-serif;
   font-size: 50px;
   font-weight: 400;
 }
 
+h2 {
+  font-family: "Overpass", sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+
 h3 {
-  font-family: "Jersey 15", sans-serif;
+  font-family: "Overpass", sans-serif;
   font-size: 20px;
   font-weight: 400;
 }

@@ -202,7 +202,7 @@ function IconListing() {
         <div className="w-full ">
             <div className="flex justify-between px-8">
                 <p>Icon Listing</p>
-                <Link to={"/upload"}><button className="bg-indigo-500 max-w-[120px] border-solid cursor-pointer rounded-2xl text-white text-xl p-4">Upload Icons</button></Link>
+                <Link to={"/upload"}><button className="bg-indigo-500 max-w-[180px] border-solid cursor-pointer rounded-2xl text-white text-xl p-4">Upload Icons</button></Link>
             </div>
             <div className="App" style={{ height: "100%" }}>
                 <div className="min-h-screen bg-gray-100 text-gray-900">
