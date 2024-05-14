@@ -1,6 +1,8 @@
 import folderAnimation from "../../lotties/folder-animation.json";
 import Lottie from "react-lottie";
 import { useState, useEffect } from "react";
+import { draftIconSave } from "../../utils/APIRoutes";
+import axios from "axios";
 
 function UploadIcon() {
     const [selectedfile, SetSelectedFile] = useState([]);
@@ -9,6 +11,11 @@ function UploadIcon() {
 
     useEffect(()=>{
         console.log("SetSelectedFile......>>>>>>",selectedfile);
+        axios.post(draftIconSave,selectedfile).then((res)=>{
+            console.log("RESSSS......", res);
+        }).catch((error)=>{
+            console.log(error);
+        })
     },[selectedfile]);
     const defaultOptions = {
         loop: true,
@@ -27,17 +34,21 @@ function UploadIcon() {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
-    const uploadDraftIcon = (e) =>{
+    const uploadDraftIcon =  (e) =>{
         let images = [];
+        let packData = [];
         for (let i = 0; i < e.target.files.length; i++) {
             images.push((e.target.files[i]));
             let reader = new FileReader();
             let file = e.target.files[i];
             reader.onloadend = () => {
                 SetSelectedFile((preValue) => {
+                    packData.push({filename: e.target.files[i].name,filetype: e.target.files[i].type,
+                        fileimage: reader.result,createdAt: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
+                    });
                     return [...preValue, {filename: e.target.files[i].name,filetype: e.target.files[i].type,
-                        fileimage: reader.result,datetime: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
-                        filesize: filesizes(e.target.files[i].size)}]
+                        fileimage: reader.result,createdAt: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
+                    }];
                 })
             }
             if (e.target.files[i]) {
@@ -80,7 +91,7 @@ function UploadIcon() {
                             return (
                                 <div className="min-h-96">
                                     <div className="grid grid-rows-2 h-full border-solid border-1 shadow-2xl rounded-xl">
-                                        <div className="row-span m-auto">
+                                        <div className="row-span flex justify-center items-center bg-gradient-to-r from-gray-200 to-slate-100">
                                         {
                                             filename.match(/.(jpg|jpeg|png|gif|svg)$/i) ?
                                             <div className="file-image"> <img src={fileimage} className="h-32 w-full" alt="" /></div> :
@@ -88,22 +99,24 @@ function UploadIcon() {
                                         }
                                         </div>
                                         <div className="row-span">
-                                        <h6>{filename ? filename.split(', ')[0] : null}</h6>
-                                        <label class="mt-3 pb-2 mb-0 caption font-weight-normal"> 1/10 Tags </label>
-                                        <div>
-                                            <div className="tags-input">
-                                            {/* {this.props.value.map((tag, index) => (
-                                                <Tag>
-                                                {tag}
-                                                <Delete onClick={this.handleRemoveTag} />
-                                                </Tag>
-                                            ))} */}
-                                            {/* <textarea className="border-2 border-solid border-gray-500 h-28 w-full h-28" type="text" 
-                                                onChange={handleChangeTag}
-                                                onKeyDown={handleKeyDownTags} /> */}
+                                            <div className="">
+                                                <h6>{filename ? filename.split(', ')[0] : null}</h6>
                                             </div>
-                                            <span>hit 'Enter' to add new tags</span>
-                                        </div>
+                                            <label class="mt-3 pb-2 mb-0 caption font-weight-normal"> 1/10 Tags </label>
+                                            <div>
+                                                <div className="tags-input">
+                                                {/* {this.props.value.map((tag, index) => (
+                                                    <Tag>
+                                                    {tag}
+                                                    <Delete onClick={this.handleRemoveTag} />
+                                                    </Tag>
+                                                ))} */}
+                                                {/* <textarea className="border-2 border-solid border-gray-500 h-28 w-full h-28" type="text" 
+                                                    onChange={handleChangeTag}
+                                                    onKeyDown={handleKeyDownTags} /> */}
+                                                </div>
+                                                <span>hit 'Enter' to add new tags</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -8,6 +8,7 @@ connectDb();
 app.use(cors())
 
 app.use("/api/auth",require("./routes/authRoutes"));
+app.use("/api/icon",require("./routes/draftIconRoutes"));
 
 const port = process.env.PORT
 app.listen(port,()=>{
