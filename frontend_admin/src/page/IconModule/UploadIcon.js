@@ -1,15 +1,31 @@
 import folderAnimation from "../../lotties/folder-animation.json";
 import Lottie from "react-lottie";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { draftIconSave } from "../../utils/APIRoutes";
 import axios from "axios";
-import { useForm } from "react-hook-form"
+import { getAllDraftPackRoute } from "../../utils/APIRoutes";
+import SVG from 'react-inlinesvg';
+import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function UploadIcon() {
     const [selectedfile, SetSelectedFile] = useState([]);
     const [ sourceFile, setSourceFile ] = useState([]);
     const [showForm, setShowForm ] = useState(false);
-    const { register, handleSubmit, formState: { errors },} = useForm();
+    const [ packFiles, setPackFiles ] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        axios.get(getAllDraftPackRoute).then((res)=>{
+            console.log("GET ALL PACK",res);
+            if(res.data && res.data.status){
+                setPackFiles(res.data.data);
+
+            }
+        }).catch((error)=>{
+            console.log(error);
+        })
+    },[]);
 
     const defaultOptions = {
         loop: true,
@@ -20,14 +36,14 @@ function UploadIcon() {
         },
     };
 
-    const filesizes = (bytes, decimals = 2) =>{
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const dm = decimals < 0 ? 0 : decimals;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-    }
+    // const filesizes = (bytes, decimals = 2) =>{
+    //     if (bytes === 0) return '0 Bytes';
+    //     const k = 1024;
+    //     const dm = decimals < 0 ? 0 : decimals;
+    //     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    //     const i = Math.floor(Math.log(bytes) / Math.log(k));
+    //     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    // }
     const uploadDraftIcon = async (e) =>{
         let images = [];
         console.log("on Chnage Calling...,");
@@ -57,7 +73,9 @@ function UploadIcon() {
                 formdata.append('files',fileData[i]);
             }
             axios.post(draftIconSave,formdata).then((res)=>{
-                console.log("Upload successfully",res);
+                console.log("Upload successfully",res , res.data.data._id);
+                navigate(`/icons/${res.data.data._id}`)
+                // <Navigate to={`/icons/${res.data.data._id}`}/>;
             }).catch((error)=>{
                 console.log(error);
             })
@@ -65,24 +83,12 @@ function UploadIcon() {
     }
     return (
         <div className="py-20 bg-white px-2">
-            { showForm ? 
-            <div className="flex justify-between items-center">
-                <div> <h3 className="font-bold"> Draft Icons </h3> </div>
-                <div className="flex gap-4">
-                <button className="border-2 border-indigo-500 w-80 max-w-[120px] m-auto border-solid cursor-pointer rounded-2xl mt-6 text-xl py-1">Save Draft</button>
-                    <button className="bg-indigo-500 w-80 max-w-[120px] m-auto border-solid cursor-pointer rounded-2xl mt-6 text-white text-xl py-1">Sumit</button>
-                </div>
-            </div>
-            : <h3 className="font-bold"> Upload icon </h3> }
-        
-            { !showForm ?
+            <h3 className="font-bold"> Upload icon </h3>
             <div className="max-w-md mx-auto rounded-lg overflow-hidden md:max-w-xl">
                 <div className="md:flex">
                     <div className="w-full p-3">
                         <div className="relative border-dotted h-48 cursor-pointer rounded-lg border-dashed border-2 border-blue-700 bg-gray-100 flex justify-center items-center">
-
                         <div className="absolute">
-                            
                             <div className="flex flex-col items-center">
                             <Lottie options={defaultOptions} height={100} width={100} />
                             <span className="block text-gray-400 font-normal">Attach you files here</span>
@@ -94,97 +100,27 @@ function UploadIcon() {
                     </div>
                 </div>
             </div>
-            :
-            <div className="px-5 py-10 bg-slate-100">
-                <div className="grid grid-cols-3 gap-4">
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Kit Name</span>
-                        <select name="country" id="country" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2">
-                            <option>Material Tailwind HTML</option>
-                            <option>Material Tailwind React</option>
-                            <option>Material Tailwind Vue</option>
-                            <option>Material Tailwind Angular</option>
-                            <option>Material Tailwind Svelte</option>
-                        </select>
-                        {/* <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Kit Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/> */}
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                </div>
-            </div>
-            }
-            <div className="">
-                <h2>Element Icons Preview</h2>
-                <div className="grid grid-cols-4 gap-6 px-5">
+            <div className="px-5">
+                <h2>Pack Preview</h2>
+                <div className="grid grid-cols-6 gap-4">
                     {
-                        selectedfile && selectedfile.map((data, index) => {
-                            const { filename, filetype, fileimage, datetime, filesize } = data;
+                        packFiles && packFiles.map((data, index) => {
                             return (
-                                <div className="min-h-96">
-                                    <div className="grid grid-rows-2 h-full border-solid border-1 shadow-2xl rounded-xl">
-                                        <div className="row-span flex justify-center items-center bg-gradient-to-r from-gray-200 to-slate-100">
-                                        {
-                                            filename.match(/.(jpg|jpeg|png|gif|svg)$/i) ?
-                                            <div className="file-image"> <img src={fileimage} className="h-32 w-full" alt="" /></div> :
-                                            <div className="file-image"><i className="far fa-file-alt"></i></div>
-                                        }
-                                        </div>
-                                        <div className="row-span">
-                                            <div className="">
-                                                <h6>{filename ? filename.split(', ')[0] : null}</h6>
-                                            </div>
-                                            <label className="mt-3 pb-2 mb-0 caption font-weight-normal"> 1/10 Tags </label>
-                                            <div>
-                                                <div className="tags-input">
-                                                {/* {this.props.value.map((tag, index) => (
-                                                    <Tag>
-                                                    {tag}
-                                                    <Delete onClick={this.handleRemoveTag} />
-                                                    </Tag>
-                                                ))} */}
-                                                {/* <textarea className="border-2 border-solid border-gray-500 h-28 w-full h-28" type="text" 
-                                                    onChange={handleChangeTag}
-                                                    onKeyDown={handleKeyDownTags} /> */}
-                                                </div>
-                                                <span>hit 'Enter' to add new tags</span>
-                                            </div>
-                                        </div>
+                                <div className="min-h-56">
+                                    <Link to={`/icons/${data._id}`}>
+                                    <div className="grid border-solid border-2 border-slate-400 rounded-xl cursor-pointer">
+                                        <span className="icon" draggable="true" clickable="true">
+                                            <SVG src={data.imageData} className="h-44 w-56"/>
+                                        </span>
                                     </div>
+                                    <div className="flex justify-center">
+                                        <span>{data.name}</span><span> ({data.packItemCount}) </span>
+                                    </div>
+                                    </Link>
                                 </div>
                             )
                         })
                     }
-                    
-                    
                 </div>
             </div>
         </div>

@@ -13,10 +13,10 @@ const iconSchema = mongoose.Schema({
         type : String,
         require : true
     },
-    packName : {
-        type : String,
+    packId : {
+        type : mongoose.Types.ObjectId,
+        ref: 'Pack',
         require : true,
-        default : "no name"
     },
     bundleName : {
         type : String,
@@ -25,14 +25,21 @@ const iconSchema = mongoose.Schema({
     style : {
         type : String,
     },
+    iconPathName : {
+        type : String
+    },
     createdAt : {
         type : Date,
     },
     updatedAt : {
         type : Date
+    },
+    status : {
+        type : String,
+        default : "draft"
     }
 },{
     timestamps : true
 })
 
-module.exports = mongoose.model("draftIcons",iconSchema);
+module.exports = mongoose.model("iconItems",iconSchema);

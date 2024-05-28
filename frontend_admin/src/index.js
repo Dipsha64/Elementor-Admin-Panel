@@ -11,6 +11,7 @@ import Protected from "./store/Protected";
 import Home from './page/Home';
 import IconListing from './page/IconModule/IconListing';
 import UploadIcon from './page/IconModule/UploadIcon';
+import DraftIconMainList from './page/IconModule/DraftIconMainList';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
       <Route index element={<Protected><Home/></Protected>}></Route>
       <Route path='icons' element={<Protected><IconListing/></Protected>}></Route>
       <Route path='upload' element={<UploadIcon/>}></Route>
+      <Route path='/icons/:packId' element={<DraftIconMainList/>}></Route>
     </Route>
   )
 )
