@@ -74,7 +74,8 @@ const saveDraftIcons = async(req,res) =>{
                     res.json({message : "Icon Item Uploaded Successfully",data : newPackData,status : true});
                 }
                 else{
-                    let names = files[count].originalname.split(', ');
+                    let names = files[count].originalname.split(/[,,.]/).map(item => item.trim().toLowerCase().replace(/\s/g,'-'));
+                    names.splice(-1, 1);
                     const iconDetails = new iconItemsModel({
                         name : names[0],
                         tag : names,

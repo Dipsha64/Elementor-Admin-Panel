@@ -201,7 +201,7 @@ function IconListing() {
     return ( 
         <div className="w-full ">
             <div className="flex justify-between px-8">
-                <p>Icon Listing</p>
+                <h2>Icon Listing</h2>
                 <Link to={"/upload"}><button className="bg-indigo-500 max-w-[180px] border-solid cursor-pointer rounded-2xl text-white text-xl p-4">Upload Icons</button></Link>
             </div>
             <div className="App" style={{ height: "100%" }}>

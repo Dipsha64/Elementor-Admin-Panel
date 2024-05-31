@@ -5,13 +5,16 @@ import axios from "axios";
 import { getParticularPackIcon } from "../../utils/APIRoutes";
 import SVG from 'react-inlinesvg';
 import { MdOutlineRemoveCircle } from "react-icons/md";
-
+import Model from "../../components/Model";
 
 function DraftIconMainList() {
-    const { register, handleSubmit, formState: { errors },} = useForm();
+    const { register, formState: { errors },} = useForm();
     const [packIconsArr, SetPackIconsArr] = useState([]);
+    const [show, setShow] = useState(false);
     const { packId } = useParams();
+    const [ selectedItem, setSelectedItem ] = useState({});
 
+    console.log(errors);
     useEffect(()=>{
         console.log("packId..",packId);
         axios.post(getParticularPackIcon,{packId : packId}).then((res)=>{
@@ -24,66 +27,83 @@ function DraftIconMainList() {
         })
     },[])
 
-    const handleChangeTag = () =>{
-
+    const handleSelect = (data , index) =>{
+        console.log("Tagsss" , data , packIconsArr , index);
+        if(index >= 0){
+            let isExist = packIconsArr[index].tag.findIndex((item)=>{
+                return item.trim() === data.trim()
+            })
+            console.log("isExist..",isExist);
+            if(isExist > -1){
+                delete packIconsArr[index].tag[isExist];
+            }
+        }
     }
 
-    const handleKeyDownTags = () => {
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleSelection = (item) => {
+        console.log("handleSelection..........item,",item);
 
-    }
+        setSelectedItem(item);
+    };
 
     return ( 
-        <div className="py-20 bg-white px-2">
-            <div className="flex justify-between items-center">
+        <div className="bg-white px-2">
+            <div className="flex justify-between bg-slate-100 items-center px-5 py-1.5">
                 <div> <h3 className="font-bold"> Draft Icons </h3> </div>
                 <div className="flex gap-4">
-                <button className="border-2 border-indigo-500 w-80 max-w-[120px] m-auto border-solid cursor-pointer rounded-2xl mt-6 text-xl py-1">Save Draft</button>
-                    <button className="bg-indigo-500 w-80 max-w-[120px] m-auto border-solid cursor-pointer rounded-2xl mt-6 text-white text-xl py-1">Sumit</button>
+                <button className="border-2 border-indigo-500 w-80 max-w-[120px] m-auto border-solid cursor-pointer rounded-xl mt-6 text-xl py-1">Save Draft</button>
+                    <button className="bg-indigo-500 w-80 max-w-[120px] m-auto border-solid cursor-pointer rounded-xl mt-6 text-white text-xl py-1">Submit</button>
                 </div>
             </div>
-            <div className="px-5 py-10 bg-slate-100">
-                <div className="grid grid-cols-3 gap-4">
+            <div className="px-5 py-10 bg-slate-100 flex">
+                <div className="grow shrink basis-4/12">
+                    Image Preview
+                </div>
+                <div className="grid grid-cols-3 gap-4 grow shrink basis-8/12">
                     <div className="grid">
                         <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
+                        <input type="text" name="packName" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
+                        {...register("packName",{ required : "Pack name is required."})}/>
+                        <span className="text-red-500">
+                            {errors.packName && <span>{errors.packName.message}</span>}
+                        </span>
                     </div>
                     <div className="grid">
                         <span>Kit Name</span>
-                        <select name="country" id="country" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2">
-                            <option>Material Tailwind HTML</option>
-                            <option>Material Tailwind React</option>
-                            <option>Material Tailwind Vue</option>
-                            <option>Material Tailwind Angular</option>
-                            <option>Material Tailwind Svelte</option>
+                        <Model show={show} handleClose={handleClose} onItemSelected={handleSelection}>
+                        </Model>
+                        <input className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" value={selectedItem.kitName} name="kit" onClick={handleShow}/>
+                    </div>
+                    <div className="grid">
+                        <span>Style</span>
+                        <select name="styleName" id="country" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" onClick={handleShow} 
+                            {...register("styleName",{ required : "Style of icon is required."})}>
+                            <option>A</option>
+                            <option>A</option>
+                            <option>A</option>
                         </select>
-                        {/* <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Kit Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/> */}
+                        <span className="text-red-500">
+                            {errors.styleName && <span>{errors.styleName.message}</span>}
+                        </span>
                     </div>
                     <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
+                        <span>Category</span>
+                        <select name="category" id="country" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" onClick={handleShow} 
+                            {...register("styleName",{ required : "Category of icon is required."})}>
+                            <option>A</option>
+                            <option>A</option>
+                            <option>A</option>
+                        </select>
+                        <span className="text-red-500">
+                            {errors.category && <span>{errors.category.message}</span>}
+                        </span>
                     </div>
                     <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
-                    </div>
-                    <div className="grid">
-                        <span>Pack Name</span>
-                        <input type="email" name="email" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("email",{ required : "Email is required.",pattern : {value:/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,message : "Email not valid"}})}/>
+                        <span>Description</span>
+                        <textarea name="description" className="leading-6 w-96 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2">
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -113,13 +133,14 @@ function DraftIconMainList() {
                                                 </div>
                                                 <div className="overflow-scroll block items-center justify-between box-content">
                                                     <ul className="h-24">
-                                                        {tag.map((tag, index) => (
-                                                            <li className="inline-flex inline-block p-1 bg-gray-200 text-sm cursor-pointer m-1.5 rounded-md">{tag}
-                                                            <MdOutlineRemoveCircle className="mt-1.5 ml-1"/>
+                                                        {tag.map((tags, ids) => (
+                                                            <li value={tags} onClick={() => handleSelect(tags,index)} key={ids} className="inline-flex inline-block p-1 bg-gray-200 text-sm m-1.5 rounded-md">
+                                                                {tags}
+                                                            <MdOutlineRemoveCircle  className="ml-1 mt-auto mb-auto cursor-pointer"/>
                                                             </li>
                                                         ))}
                                                         <li className="inline-block">
-                                                            <input type="text" className=""/>
+                                                            <input type="text" className="outline-none w-20 border-none"/>
                                                         </li>
                                                     </ul>
                                                 </div>
