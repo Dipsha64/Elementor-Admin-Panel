@@ -7,57 +7,10 @@ const saveDraftIcons = async(req,res) =>{
     try {
         const files = req.files;
         console.log("files..",files);
-        // if (Array.isArray(files) && files.length > 0) {
-        //     const packData = await packModel.create({
-        //         name : 'no name',
-        //         slug : "no_name",
-        //         createdAt : new Date(),
-        //         updatedAt : new Date(), 
-        //         status : "draft"
-        //     }).then((result)=>{
-        //         console.log("Pack Create Successfully",result);
-        //         let count = 0;
-        //         uploadItemsFunction = async () =>{
-        //             if(count >= files.length){
-        //                 res.json({message : "Icon Item Uploaded Successfully",status : true});
-        //             }
-        //             else{
-        //                 let names = files[count].originalname.split(', ');
-        //                 console.log("result._id...",result._id);
-        //                 const iconDetails = {
-        //                     name : names[0],
-        //                     tag : names,
-        //                     category : '',
-        //                     packId : "111",
-        //                     bundleName : '',
-        //                     style : '',
-        //                     createdAt : new Date(),
-        //                     updatedAt : new Date(),
-        //                     path : files[count].path,
-        //                     status : "draft"
-        //                 }
-        //                 const newPack = await iconItemsModel.create({
-        //                     iconDetails
-        //                 }).then(()=>{
-        //                     console.log("Item Created successfully...");
-        //                     count++;
-        //                     uploadItemsFunction(files);
-        //                 }).catch((error)=>{
-        //                     console.log(error);
-        //                 });
-        //             }
-        //         }
-        //         uploadItemsFunction(files);
-        //     }).catch((error)=>{
-        //         console.log(error);
-        //     })
-        // } else {
-        //   throw new Error("File upload unsuccessful");
-        // }
 
         if (Array.isArray(files) && files.length > 0) {
             const newPackData = new packModel({
-                name : 'no name',
+                packName : 'no name',
                 slug : "no_name",
                 createdAt : new Date(),
                 updatedAt : new Date(), 
@@ -79,10 +32,7 @@ const saveDraftIcons = async(req,res) =>{
                     const iconDetails = new iconItemsModel({
                         name : names[0],
                         tag : names,
-                        category : '',
                         packId : newPackData._id,
-                        bundleName : '',
-                        style : '',
                         createdAt : new Date(),
                         updatedAt : new Date(),
                         path : files[count].path,
@@ -99,6 +49,52 @@ const saveDraftIcons = async(req,res) =>{
         }
     }
     catch (error) {
+        console.log(error);
+    }
+}
+
+const saveActiveIcons = async (req,res) => {
+    try {
+        console.log(req.body);
+        const { formData, packId, status, iconData } = req.body;
+        const updatePackObj = {
+            packName : formData.packName,
+            slug : formData.packName.trim().toLowerCase().replace(/\s/g,'-'),
+            updatedAt : new Date(), 
+            status : status,
+            category : formData.category,
+            style : formData.style,
+            description : formData.description,
+            kitDetails : formData.kitValue
+        };
+        console.log("updatePackObj..",updatePackObj);
+        const newData = await packModel.findByIdAndUpdate(packId,updatePackObj);
+        if(iconData && iconData.length > 0){
+            let count = 0;
+            updateItemsFunction = async () =>{
+                if(count >= iconData.length){
+                    res.json({message : "Icon Item Uploaded Successfully",data : newData,status : true});
+                }
+                else{
+                    let tagArr = iconData[count].tag.map(item => item.trim().toLowerCase().replace(/\s/g,'-'));
+                    const iconDetails = {
+                        name: tagArr[0],
+                        tag : tagArr,
+                        updatedAt : new Date(),
+                        status : status,
+                        category : formData.category,
+                        style : formData.style,
+                        kitDetails : formData.kitValue
+                    }
+                    await iconItemsModel.findByIdAndUpdate(iconData._id,iconDetails);
+                    console.log("Item Created successfully...");
+                    count++;
+                    updateItemsFunction(iconData);
+                }
+            }
+            updateItemsFunction(iconData); 
+        }
+    } catch (error) {
         console.log(error);
     }
 }
@@ -141,4 +137,4 @@ const getParticularPackIconItem = async (req,res) => {
        console.log(error); 
     }
 }
-module.exports = { saveDraftIcons, getAllIconItem, getParticularPackIconItem };
+module.exports = { saveDraftIcons, getAllIconItem, getParticularPackIconItem,saveActiveIcons };

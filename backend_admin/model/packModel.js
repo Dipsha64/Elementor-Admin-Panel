@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const packSchema = mongoose.Schema({
-    name : {
+    packName : {
         type : String,
         require : true
     },
@@ -27,6 +27,18 @@ const packSchema = mongoose.Schema({
     },
     packItemCount : {
         type : Number,
+    },
+    category : {
+        type : String
+    },
+    style : {
+        type : String
+    },
+    description : {
+        type : String
+    },
+    kitDetails : {
+        type : Object
     }
 },{
     timestamps : true

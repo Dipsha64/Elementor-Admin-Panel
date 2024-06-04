@@ -7,6 +7,8 @@ import { getAllDraftPackRoute } from "../../utils/APIRoutes";
 import SVG from 'react-inlinesvg';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UploadIcon() {
     const [selectedfile, SetSelectedFile] = useState([]);
@@ -14,6 +16,13 @@ function UploadIcon() {
     const [showForm, setShowForm ] = useState(false);
     const [ packFiles, setPackFiles ] = useState([]);
     const navigate = useNavigate();
+    const toastOption = {
+        position : "top-right",
+        autoClose : 8000,
+        pauseOnHover : true,
+        theme : "dark",
+        draggable : true
+    }
 
     useEffect(()=>{
         axios.get(getAllDraftPackRoute).then((res)=>{
@@ -35,35 +44,31 @@ function UploadIcon() {
           preserveAspectRatio: "xMidYMid slice",
         },
     };
-
-    // const filesizes = (bytes, decimals = 2) =>{
-    //     if (bytes === 0) return '0 Bytes';
-    //     const k = 1024;
-    //     const dm = decimals < 0 ? 0 : decimals;
-    //     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    //     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    //     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-    // }
     const uploadDraftIcon = async (e) =>{
         let images = [];
-        console.log("on Chnage Calling...,");
-        for (let i = 0; i < e.target.files.length; i++) {
-            images.push((e.target.files[i]));
-            let reader = new FileReader();
-            let file = e.target.files[i];
-            reader.onloadend = () => {
-                SetSelectedFile((preValue) => {
-                    return [...preValue, {filename: e.target.files[i].name,filetype: e.target.files[i].type,
-                        fileimage: reader.result,createdAt: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
-                    }];
-                })
+        console.log("on Chnage Calling...,", e.target.files);
+        if(e.target.files.length >= 6){
+            for (let i = 0; i < e.target.files.length; i++) {
+                images.push((e.target.files[i]));
+                let reader = new FileReader();
+                let file = e.target.files[i];
+                reader.onloadend = () => {
+                    SetSelectedFile((preValue) => {
+                        return [...preValue, {filename: e.target.files[i].name,filetype: e.target.files[i].type,
+                            fileimage: reader.result,createdAt: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
+                        }];
+                    })
+                }
+                if (e.target.files[i]) {
+                    reader.readAsDataURL(file);
+                }
             }
-            if (e.target.files[i]) {
-                reader.readAsDataURL(file);
-            }
+            setSourceFile(e.target.files);
+            uploadDraftData(e.target.files);
         }
-        setSourceFile(e.target.files);
-        uploadDraftData(e.target.files);
+        else {
+            toast("Minimum 6 icon is required to upload as a pack.",toastOption);
+        }
     }
     const uploadDraftData = (fileData) =>{
         let formdata = new FormData();
@@ -82,6 +87,7 @@ function UploadIcon() {
         }
     }
     return (
+        <>
         <div className="py-20 bg-white px-2">
             <h3 className="font-bold"> Upload icon </h3>
             <div className="max-w-md mx-auto rounded-lg overflow-hidden md:max-w-xl">
@@ -114,7 +120,7 @@ function UploadIcon() {
                                         </span>
                                     </div>
                                     <div className="flex justify-center">
-                                        <span>{data.name}</span><span> ({data.packItemCount}) </span>
+                                        <span>{data.packName}</span><span> ({data.packItemCount}) </span>
                                     </div>
                                     </Link>
                                 </div>
@@ -124,6 +130,8 @@ function UploadIcon() {
                 </div>
             </div>
         </div>
+        <ToastContainer />
+        </>
     );
 }
 

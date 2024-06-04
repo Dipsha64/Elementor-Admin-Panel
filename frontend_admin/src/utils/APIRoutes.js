@@ -6,3 +6,4 @@ export const getAllDraftPackRoute = `${host}/api/pack/getDraftPack`;
 export const getParticularPackIcon = `${host}/api/icon/getPackIcons`;
 export const addNewKitRoute = `${host}/api/kit/addKit`;
 export const getAllKitRoute = `${host}/api/kit/getKit`;
+export const saveActiveIcon = `${host}/api/icon/addActiveIcons`;

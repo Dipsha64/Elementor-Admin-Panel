@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { saveDraftIcons, getParticularPackIconItem } = require("../controller/Icons/iconItemController");
+const { saveDraftIcons, getParticularPackIconItem, saveActiveIcons } = require("../controller/Icons/iconItemController");
 const upload = require("../utils/fileUpload");
 
 // const multer = require("multer");
@@ -46,5 +46,6 @@ const upload = require("../utils/fileUpload");
 
 router.post("/addDraftIcon",upload.array('files'),saveDraftIcons);
 router.post("/getPackIcons",getParticularPackIconItem);
+router.post("/addActiveIcons",saveActiveIcons);
 
 module.exports = router;

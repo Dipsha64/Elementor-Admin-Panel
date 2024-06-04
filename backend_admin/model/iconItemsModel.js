@@ -18,9 +18,8 @@ const iconSchema = mongoose.Schema({
         ref: 'Pack',
         require : true,
     },
-    bundleName : {
-        type : String,
-        require : true
+    kitDetails : {
+        type : Object,
     },
     style : {
         type : String,
