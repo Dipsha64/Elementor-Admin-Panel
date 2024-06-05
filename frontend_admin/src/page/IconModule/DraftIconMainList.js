@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { getParticularPackIcon, saveActiveIcon } from "../../utils/APIRoutes";
+import { getParticularPackIcon, saveActiveIcon, getParticulatpack, getAllKitRoute } from "../../utils/APIRoutes";
 import SVG from 'react-inlinesvg';
 import { MdOutlineRemoveCircle } from "react-icons/md";
 import Model from "../../components/Model";
@@ -10,26 +10,45 @@ import styleOption from "../../utils/styleJSON";
 import categoryOption from "../../utils/categoryJSON";
 
 function DraftIconMainList() {
-    const { register,handleSubmit, formState: { errors },} = useForm();
+    const { register,handleSubmit,setValue, formState: { errors },} = useForm();
     const [packIconsArr, SetPackIconsArr] = useState([]);
     const [show, setShow] = useState(false);
     const { packId } = useParams();
     const [ selectedItem, setSelectedItem ] = useState({});
     const [ submitStatus, setSubmitStatus ] = useState("");
+    // const [kitItems, setKitItems] = useState([]);
+    const [ formData, setFormData ] = useState({
+        packName: '',
+        category: '',
+        style: '',
+        description : '',
+    });
 
     console.log(errors);
     useEffect(()=>{
-        fetchPackData();
+        fetchIconItems();
+        fethPackData();
     },[])
 
     useEffect(() => {
         setSubmitStatus(submitStatus);
-      },[submitStatus]);
+    },[submitStatus]);
 
-    const fetchPackData = () => {
+    // useEffect(()=>{
+    //     axios.get(getAllKitRoute).then((res)=>{
+    //         if(res.data.status){
+    //           setKitItems(res.data.data);
+    //         }
+    //       }).catch((error)=>{
+    //         console.log(error);
+    //       })
+    // })
+
+    const fetchIconItems = () => {
         try {
             axios.post(getParticularPackIcon,{packId : packId}).then((res)=>{
                 if(res.data && res.data.status){
+                    console.log("REs Effect...",res.data);
                     SetPackIconsArr(res.data.data);
                 }
             }).catch((error)=>{
@@ -39,6 +58,31 @@ function DraftIconMainList() {
             console.log(error);
         }
     }
+    const fethPackData = async (req,res) => {
+        try {
+            axios.post(getParticulatpack,{packId : packId}).then((res)=>{
+                console.log("RES getParticulatpack",res);
+                if(res.data && res.data.status){
+                    setFormData({
+                        packName: res.data.data.packName,
+                        category: res.data.data.category,
+                        style: res.data.data.style,
+                        description : res.data.data.description,
+                    })
+                    setValue("packName", res.data.data.packName, {
+                        shouldValidate: true,
+                    });
+                    setValue("style",res.data.data.style);
+                    setValue("category",res.data.data.category);
+                    setValue("description",res.data.data.description);
+                    // setFormData(res.data.data);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handleRemoveTag = (data , index, packObj) =>{
         const findtagId =  packIconsArr[index].tag.findIndex((item)=>{
             return item === data
@@ -70,6 +114,7 @@ function DraftIconMainList() {
         packIconsArr[index].newTagVal = e.target.value;
     }
     const submitIcons = (data, status) => {
+        console.log("SUBMIT DATA",data ,status);
         let kitObj = { _id : selectedItem._id, kitName : selectedItem.kitName }
         const objData = {...data, kitValue : kitObj};
         axios.post(saveActiveIcon,{packId: packId,formData : objData, iconData : packIconsArr, status : status}).then((res)=>{
@@ -78,9 +123,18 @@ function DraftIconMainList() {
             console.log(error);
         })
     };
+    const packNameRegister = register("packName", {required: "Pack name is required."});
+    const handleInputChange = (e) => {
+        console.log("Change Event Calling...",e.target.name, e.target.value);
+        setFormData({
+          ...formData,
+          [e.target.name]: e.target.value
+        });
+    };
+
     return ( 
         <div className="bg-white px-2">
-            <form noValidate>
+            <form>
             <div className="flex justify-between bg-slate-100 items-center px-5 py-1.5">
                 <div> <h3 className="font-bold"> Draft Icons </h3> </div>
                 <div className="flex gap-4">
@@ -108,8 +162,8 @@ function DraftIconMainList() {
                 <div className="grid grid-cols-3 gap-4 grow shrink basis-8/12">
                     <div className="grid">
                         <span>Pack Name</span>
-                        <input type="text" name="packName" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" placeholder="Enter Pack Name"
-                        {...register("packName",{ required : "Pack name is required."})}/>
+                        <input type="text" name="packName" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2"
+                            placeholder="Enter Pack Name" {...packNameRegister } onChange={e => {handleInputChange(e); }} />
                         <span className="text-red-500">
                             {errors.packName && <span>{errors.packName.message}</span>}
                         </span>
@@ -122,8 +176,8 @@ function DraftIconMainList() {
                     </div>
                     <div className="grid">
                         <span>Style</span>
-                        <select name="styleName" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" 
-                            {...register("styleName",{ required : "Style of icon is required."})}>
+                        <select name="style" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" 
+                            {...register("style")}>
                                 {styleOption && styleOption.map((styleItem)=>{
                                     return (
                                         <option value={styleItem.value}>{styleItem.name}</option>
@@ -131,13 +185,13 @@ function DraftIconMainList() {
                                 })}
                         </select>
                         <span className="text-red-500">
-                            {errors.styleName && <span>{errors.styleName.message}</span>}
+                            {errors.style && <span>{errors.style.message}</span>}
                         </span>
                     </div>
                     <div className="grid">
                         <span>Category</span>
                         <select name="category" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2"
-                            {...register("category",{ required : "Category of icon is required."})}>
+                            {...register("category")}>
                                 {categoryOption && categoryOption.map((styleItem)=>{
                                     return (
                                         <option value={styleItem.value}>{styleItem.name}</option>
@@ -150,7 +204,7 @@ function DraftIconMainList() {
                     </div>
                     <div className="grid">
                         <span>Description</span>
-                        <textarea name="description" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" {...register("description")}>
+                        <textarea name="description" onChange={handleInputChange} {...register("description")} className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" {...register("description")}>
                         </textarea>
                     </div>
                 </div>

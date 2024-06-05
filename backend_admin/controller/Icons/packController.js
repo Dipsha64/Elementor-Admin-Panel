@@ -31,4 +31,14 @@ const getAllDraftPack = async (req,res) =>{
     }
 }
 
-module.exports = { getAllDraftPack };
+const getParticularPack = async (req,res) => {
+    try {
+        const packObj = await packModel.findOne({_id : req.body.packId});
+        console.log("packObj...",packObj);
+        res.json({message: "Packs data get successfully.",status : true, data : packObj});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+module.exports = { getAllDraftPack, getParticularPack };
