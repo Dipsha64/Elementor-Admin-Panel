@@ -16,7 +16,7 @@ function DraftIconMainList() {
     const { packId } = useParams();
     const [ selectedItem, setSelectedItem ] = useState({});
     const [ submitStatus, setSubmitStatus ] = useState("");
-    // const [kitItems, setKitItems] = useState([]);
+    const [kitItems, setKitItems] = useState([]);
     const [ formData, setFormData ] = useState({
         packName: '',
         category: '',
@@ -34,15 +34,15 @@ function DraftIconMainList() {
         setSubmitStatus(submitStatus);
     },[submitStatus]);
 
-    // useEffect(()=>{
-    //     axios.get(getAllKitRoute).then((res)=>{
-    //         if(res.data.status){
-    //           setKitItems(res.data.data);
-    //         }
-    //       }).catch((error)=>{
-    //         console.log(error);
-    //       })
-    // })
+    useEffect(()=>{
+        axios.get(getAllKitRoute).then((res)=>{
+            if(res.data.status){
+              setKitItems(res.data.data);
+            }
+          }).catch((error)=>{
+            console.log(error);
+          })
+    },[])
 
     const fetchIconItems = () => {
         try {
@@ -114,7 +114,7 @@ function DraftIconMainList() {
         packIconsArr[index].newTagVal = e.target.value;
     }
     const submitIcons = (data, status) => {
-        console.log("SUBMIT DATA",data ,status);
+        console.log("SUBMIT DATA",packIconsArr);
         let kitObj = { _id : selectedItem._id, kitName : selectedItem.kitName }
         const objData = {...data, kitValue : kitObj};
         axios.post(saveActiveIcon,{packId: packId,formData : objData, iconData : packIconsArr, status : status}).then((res)=>{

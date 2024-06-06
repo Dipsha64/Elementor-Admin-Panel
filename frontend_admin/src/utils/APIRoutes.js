@@ -8,3 +8,4 @@ export const addNewKitRoute = `${host}/api/kit/addKit`;
 export const getAllKitRoute = `${host}/api/kit/getKit`;
 export const saveActiveIcon = `${host}/api/icon/addActiveIcons`;
 export const getParticulatpack =  `${host}/api/pack/packSingleData`;
+export const getActiveIcons = `${host}/api/icon/getActiveIcons`;

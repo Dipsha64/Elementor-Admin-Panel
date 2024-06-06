@@ -1,13 +1,11 @@
-const iconItemsModel = require("../../model/iconItemsModel");
-const packModel = require("../../model/packModel");
+const iconItemsModel = require("../../../model/iconItemsModel");
+const packModel = require("../../../model/packModel");
 const path = require('path');
 const fs = require('fs');
 
 const saveDraftIcons = async(req,res) =>{
     try {
         const files = req.files;
-        console.log("files..",files);
-
         if (Array.isArray(files) && files.length > 0) {
             const newPackData = new packModel({
                 packName : 'no name',
@@ -39,8 +37,7 @@ const saveDraftIcons = async(req,res) =>{
                         iconPathName : files[count].filename,
                         status : "draft"
                     })
-                    await iconDetails.save(); 
-                    console.log("Item Created successfully...");
+                    await iconDetails.save();
                     count++;
                     uploadItemsFunction(files);
                 }
@@ -55,7 +52,6 @@ const saveDraftIcons = async(req,res) =>{
 
 const saveActiveIcons = async (req,res) => {
     try {
-        console.log(req.body);
         const { formData, packId, status, iconData } = req.body;
         const updatePackObj = {
             packName : formData.packName,
@@ -67,7 +63,6 @@ const saveActiveIcons = async (req,res) => {
             description : formData.description,
             kitDetails : formData.kitValue
         };
-        console.log("updatePackObj..",updatePackObj);
         const newData = await packModel.findByIdAndUpdate(packId,updatePackObj);
         if(iconData && iconData.length > 0){
             let count = 0;
@@ -86,8 +81,7 @@ const saveActiveIcons = async (req,res) => {
                         style : formData.style,
                         kitDetails : formData.kitValue
                     }
-                    await iconItemsModel.findByIdAndUpdate(iconData._id,iconDetails);
-                    console.log("Item Created successfully...");
+                    await iconItemsModel.findByIdAndUpdate(iconData[count]._id,iconDetails);
                     count++;
                     updateItemsFunction(iconData);
                 }
@@ -99,9 +93,27 @@ const saveActiveIcons = async (req,res) => {
     }
 }
 
-const getAllIconItem = async (req,res) =>{
+const getAllActiveIconItem = async (req,res) =>{
     try {
-        
+        const activeIcons = await iconItemsModel.find({"status" : "active"});
+        if(activeIcons && activeIcons.length > 0){
+            const iconWithImages = activeIcons.map(item => {
+                const imagePath = path.join(__dirname, '../../uploads/icons/', item.iconPathName);
+                let imageData = null;
+                try {
+                    imageData = fs.readFileSync(imagePath, 'utf8');
+                } catch (err) {
+                  console.error(`Error reading image at ${imagePath}`, err);
+                }
+                return {
+                  ...item.toObject(),
+                  imageData: imageData
+                };
+            });
+            res.send({message : "Pack Icon Get Successfully", status : true, data : iconWithImages});
+        }
+        console.log("activeIcons...",activeIcons);
+        res.send({message : "All Active Get Successfully", status : true, data : activeIcons});
     } catch (error) {
         console.log(error);
     }
@@ -109,7 +121,6 @@ const getAllIconItem = async (req,res) =>{
 
 const getParticularPackIconItem = async (req,res) => {
     try {
-        console.log("getPackIcons..", req.body);
         const id = req.body.packId;
         const iconData = await iconItemsModel.find({ packId : id});
         if(iconData && iconData.length > 0){
@@ -126,7 +137,6 @@ const getParticularPackIconItem = async (req,res) => {
                   imageData: imageData
                 };
             });
-          
             res.send({message : "Pack Icon Get Successfully", status : true, data : iconWithImages});
         }
         else{
@@ -136,4 +146,4 @@ const getParticularPackIconItem = async (req,res) => {
        console.log(error); 
     }
 }
-module.exports = { saveDraftIcons, getAllIconItem, getParticularPackIconItem,saveActiveIcons };
+module.exports = { saveDraftIcons, getAllActiveIconItem, getParticularPackIconItem,saveActiveIcons };

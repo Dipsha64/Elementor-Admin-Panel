@@ -10,6 +10,10 @@ function Table({ columns, data }) {
         gotoPage,nextPage,previousPage,setPageSize,state,preGlobalFilteredRows,setGlobalFilter } = useTable({ columns, data },
         useFilters,useGlobalFilter,useSortBy,usePagination );
 
+        const paginationValue = (num) => {
+            console.log("NUMMM",num);
+        }
+
     return ( 
         <>
         {headerGroups.map((headerGroup) =>
@@ -112,7 +116,7 @@ function Table({ columns, data }) {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     value={state.pageSize}
                     onChange={(e) => {
-                    setPageSize(Number(e.target.value));
+                    setPageSize(Number(e.target.value)); paginationValue(Number(e.target.value));
                     }}
                 >
                     {[5, 10, 20].map((pageSize) => (
