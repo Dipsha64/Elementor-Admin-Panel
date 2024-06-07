@@ -96,23 +96,23 @@ const saveActiveIcons = async (req,res) => {
 const getAllActiveIconItem = async (req,res) =>{
     try {
         const activeIcons = await iconItemsModel.find({"status" : "active"});
-        if(activeIcons && activeIcons.length > 0){
-            const iconWithImages = activeIcons.map(item => {
-                const imagePath = path.join(__dirname, '../../uploads/icons/', item.iconPathName);
-                let imageData = null;
-                try {
-                    imageData = fs.readFileSync(imagePath, 'utf8');
-                } catch (err) {
-                  console.error(`Error reading image at ${imagePath}`, err);
-                }
-                return {
-                  ...item.toObject(),
-                  imageData: imageData
-                };
-            });
-            res.send({message : "Pack Icon Get Successfully", status : true, data : iconWithImages});
-        }
-        console.log("activeIcons...",activeIcons);
+        // if(activeIcons && activeIcons.length > 0){
+        //     const iconWithImages = activeIcons.map(item => {
+        //         const imagePath = path.join(__dirname, '../../uploads/icons/', item.iconPathName);
+        //         let imageData = null;
+        //         try {
+        //             imageData = fs.readFileSync(imagePath, 'utf8');
+        //         } catch (err) {
+        //           console.error(`Error reading image at ${imagePath}`, err);
+        //         }
+        //         return {
+        //           ...item.toObject(),
+        //           imageData: imageData
+        //         };
+        //     });
+        //     res.send({message : "Pack Icon Get Successfully", status : true, data : iconWithImages});
+        // }
+        // console.log("activeIcons...",activeIcons);
         res.send({message : "All Active Get Successfully", status : true, data : activeIcons});
     } catch (error) {
         console.log(error);
