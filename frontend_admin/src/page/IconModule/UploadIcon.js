@@ -100,7 +100,6 @@ function UploadIcon() {
                             <span className="block text-gray-400 font-normal">Attach you files here</span>
                             </div>
                         </div>
-
                         <input type="file" className="h-full w-full opacity-0 cursor-pointer" name="files" onChange={uploadDraftIcon} multiple/>
                         </div>
                     </div>

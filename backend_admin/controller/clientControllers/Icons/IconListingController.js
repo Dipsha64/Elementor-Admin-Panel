@@ -8,11 +8,24 @@ const getPaginationIcon = async (req,res) => {
         const page = parseInt(req.body.page) || 1;
         const limit = parseInt(req.body.limit) || 10;
 
-        const iconData = await iconItemsModel.find().skip((page-1)*limit).limit(limit);
-        console.log("ICONNN DATAA", iconData);
+        let iconData = null;
+        const search = req.body.query;
+        // if(query){
+        //     const regex = new RegExp(query, 'i');
+        //     iconData = await iconItemsModel.find(query ? { tag : { $in: [regex] } } : {});
+        //     // iconData = await iconItemsModel.find({ tag: { $in: {$regex : query, $options : "i"}} }).skip((page-1)*limit).limit(limit);
+        // }
+        // else{
+        //     iconData = await iconItemsModel.find().skip((page-1)*limit).limit(limit);
+        // }
+        const regex = new RegExp(search, 'i');
+        const query = search !== '' ? { tag : { $in: [regex] } } : {};
+        console.log("query...",query);
+        iconData = await iconItemsModel.find(query).skip((page-1)*limit).limit(parseInt(limit));
+        console.log("API iconData" , iconData.length);
         if(iconData && iconData.length > 0){
             const iconWithImages = iconData.map(item => {
-                const imagePath = path.join(__dirname, '../../uploads/icons/', item.iconPathName);
+                const imagePath = path.join(__dirname, '../../../uploads/icons/', item.iconPathName);
                 let imageData = null;
                 try {
                     imageData = fs.readFileSync(imagePath, 'utf8');

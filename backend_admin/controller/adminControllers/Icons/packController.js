@@ -5,10 +5,9 @@ const fs = require('fs');
 const getAllDraftPack = async (req,res) =>{
     try {
         const draftPackData = await packModel.find({"status" : "draft"});
-        // const filePath = path.join(__dirname, '../../uploads/icons/',"1716296082108_Gratitude.svg");
 
         const packWithImages = draftPackData.map(item => {
-            const imagePath = path.join(__dirname, '../../uploads/icons/', item.packImage);
+            const imagePath = path.join(__dirname, '../../../uploads/icons/', item.packImage);
             let imageData = null;
             try {
                 // imageData = fs.readFileSync(imagePath, { encoding: 'base64' });

@@ -125,7 +125,7 @@ const getParticularPackIconItem = async (req,res) => {
         const iconData = await iconItemsModel.find({ packId : id});
         if(iconData && iconData.length > 0){
             const iconWithImages = iconData.map(item => {
-                const imagePath = path.join(__dirname, '../../uploads/icons/', item.iconPathName);
+                const imagePath = path.join(__dirname, '../../../uploads/icons/', item.iconPathName);
                 let imageData = null;
                 try {
                     imageData = fs.readFileSync(imagePath, 'utf8');
