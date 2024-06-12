@@ -8,6 +8,8 @@ import { MdOutlineRemoveCircle } from "react-icons/md";
 import Model from "../../components/Model";
 import styleOption from "../../utils/styleJSON";
 import categoryOption from "../../utils/categoryJSON";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function DraftIconMainList() {
     const { register,handleSubmit,setValue, formState: { errors },} = useForm();
@@ -23,6 +25,14 @@ function DraftIconMainList() {
         style: '',
         description : '',
     });
+
+    const toastOption = {
+        position : "top-right",
+        autoClose : 8000,
+        pauseOnHover : true,
+        theme : "dark",
+        draggable : true
+    }
 
     console.log(errors);
     useEffect(()=>{
@@ -114,12 +124,13 @@ function DraftIconMainList() {
         packIconsArr[index].newTagVal = e.target.value;
     }
     const submitIcons = (data, status) => {
-        console.log("SUBMIT DATA",packIconsArr);
         let kitObj = { _id : selectedItem._id, kitName : selectedItem.kitName }
         const objData = {...data, kitValue : kitObj};
         axios.post(saveActiveIcon,{packId: packId,formData : objData, iconData : packIconsArr, status : status}).then((res)=>{
             console.log("res...",res);
+            toast(`The ${status} icon has been created successfully.`,toastOption);
         }).catch((error)=>{
+            toast("Something went wrong! please try again.",toastOption);
             console.log(error);
         })
     };
@@ -133,6 +144,7 @@ function DraftIconMainList() {
     };
 
     return ( 
+        <>
         <div className="bg-white px-2">
             <form>
             <div className="flex justify-between bg-slate-100 items-center px-5 py-1.5">
@@ -268,6 +280,8 @@ function DraftIconMainList() {
                 </div>
             </div>
         </div>
+        <ToastContainer />
+        </>
     );
 }
 

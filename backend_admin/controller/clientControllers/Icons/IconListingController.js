@@ -19,7 +19,13 @@ const getPaginationIcon = async (req,res) => {
         //     iconData = await iconItemsModel.find().skip((page-1)*limit).limit(limit);
         // }
         const regex = new RegExp(search, 'i');
+        console.log("search..",search);
         const query = search !== '' ? { tag : { $in: [regex] } } : {};
+        // let query = {};
+        // if (search) {
+        //     query = { tags: { $regex: new RegExp(search, 'i') } };
+        // }
+
         console.log("query...",query);
         iconData = await iconItemsModel.find(query).skip((page-1)*limit).limit(parseInt(limit));
         console.log("API iconData" , iconData.length);
