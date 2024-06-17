@@ -10,14 +10,6 @@ const getPaginationIcon = async (req,res) => {
 
         let iconData = null;
         const search = req.body.query;
-        // if(query){
-        //     const regex = new RegExp(query, 'i');
-        //     iconData = await iconItemsModel.find(query ? { tag : { $in: [regex] } } : {});
-        //     // iconData = await iconItemsModel.find({ tag: { $in: {$regex : query, $options : "i"}} }).skip((page-1)*limit).limit(limit);
-        // }
-        // else{
-        //     iconData = await iconItemsModel.find().skip((page-1)*limit).limit(limit);
-        // }
         const regex = new RegExp(search, 'i');
         console.log("search..",search);
         const query = search !== '' ? { tag : { $in: [regex] } } : {};

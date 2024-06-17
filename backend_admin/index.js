@@ -5,7 +5,13 @@ const dotenv = require("dotenv").config();
 const connectDb = require("./config/dbConnection");
 const cors = require("cors");
 connectDb();
-app.use(cors());
+app.use(cors(
+    {
+        origin: ["https://element-admin.vercel.app"],
+        methods: ["POST", "GET"],
+        credentials: true
+    }
+));
 app.use(express.static('/uploads/icons'));
 
 // Admin Panel Routing
