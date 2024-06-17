@@ -1,4 +1,5 @@
-const host = "http://localhost:5007";
+// const host = "http://localhost:5007";
+const host = "https://element-api-eight.vercel.app";
 
 export const loginRoute = `${host}/api/auth/adminLogin`;
 export const draftIconSave = `${host}/api/icon/addDraftIcon`;
