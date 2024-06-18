@@ -7,7 +7,7 @@ const cors = require("cors");
 connectDb();
 app.use(cors(
     {
-        origin: ["https://element-api-eight.vercel.app"],
+        origin: ["https://element-frontend.vercel.app"],
         methods: ["POST", "GET"],
         credentials: true
     }
