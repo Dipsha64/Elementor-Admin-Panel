@@ -9,3 +9,13 @@ export const getAllKitRoute = `${host}/api/kit/getKit`;
 export const saveActiveIcon = `${host}/api/icon/addActiveIcons`;
 export const getParticulatpack =  `${host}/api/pack/packSingleData`;
 export const getActiveIcons = `${host}/api/icon/getActiveIcons`;
+
+export const getCategory = `${host}/api/setting/getCategory`;
+export const createCategory = `${host}/api/setting/addCategory`;
+export const updateCategory = `${host}/api/setting/updateCategory`;
+export const deleteCategory = `${host}/api/setting/updateCategory`;
+
+export const getStyle = `${host}/api/setting/getStyle`;
+export const createStyle = `${host}/api/setting/addStyle`;
+export const updateStyle = `${host}/api/setting/updateStyle`;
+export const deleteStyle = `${host}/api/setting/updateStyle`;

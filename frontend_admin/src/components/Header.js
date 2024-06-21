@@ -36,8 +36,9 @@ function Header() {
                             <FaUser />
                         </div>
                         { showMenu && 
-                            <div className="absolute right-3 bg-white py-3 px-2 shadow drop-shadow-md flex flex-col text-indigo-600" onClick={handleLogout}>
-                                <span className="whitespace-nowrap cursor-pointer">Logout</span>
+                            <div className="absolute right-3 bg-white py-3 px-2 shadow drop-shadow-md flex flex-col text-indigo-600">
+                                <Link to={"/setting"}><span className="whitespace-nowrap cursor-pointer">Setting</span></Link>
+                                <span className="whitespace-nowrap cursor-pointer" onClick={handleLogout}>Logout</span>
                             </div>
                         }
                     </div>

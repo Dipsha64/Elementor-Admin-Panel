@@ -7,7 +7,7 @@ function Protected({children}){
     const user = useSelector(isAuthenticated);
     console.log("user.. Protected",user);
     if(Object.keys(user).length <= 0){
-        <Navigate to={"/adminLogin"}></Navigate>
+        return <Navigate to={"/adminLogin"} replace={true}></Navigate>
     }
     if(Object.keys(user).length> 0){
         return children;

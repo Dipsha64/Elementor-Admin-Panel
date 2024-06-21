@@ -6,6 +6,7 @@ import { isAuthenticated } from './features/Auth/AuthSlice';
 
 function App() {
   const user = useSelector(isAuthenticated);
+  console.log("user...",user);
   return (
     <div>
       {Object.keys(user).length >0 ? <Header/> : ''}
