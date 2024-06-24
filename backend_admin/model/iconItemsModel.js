@@ -10,8 +10,7 @@ const iconSchema = mongoose.Schema({
         require : true
     },
     category : {
-        type : String,
-        require : true
+        type : Object,
     },
     packId : {
         type : mongoose.Types.ObjectId,
@@ -22,7 +21,7 @@ const iconSchema = mongoose.Schema({
         type : Object,
     },
     style : {
-        type : String,
+        type : Object,
     },
     iconPathName : {
         type : String

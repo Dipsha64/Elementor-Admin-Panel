@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { getParticularPackIcon, saveActiveIcon, getParticulatpack, getAllKitRoute } from "../../utils/APIRoutes";
+import { getParticularPackIcon, saveActiveIcon, getParticulatpack, getAllKitRoute, getCategory, getStyle } from "../../utils/APIRoutes";
 import SVG from 'react-inlinesvg';
 import { MdOutlineRemoveCircle } from "react-icons/md";
 import Model from "../../components/Model";
@@ -19,6 +19,9 @@ function DraftIconMainList() {
     const [ selectedItem, setSelectedItem ] = useState({});
     const [ submitStatus, setSubmitStatus ] = useState("");
     const [kitItems, setKitItems] = useState([]);
+    const [categoryArr, setCategoryArr ] = useState([]);
+    const [ styleArr, setStyleArr ] = useState([]);
+
     const [ formData, setFormData ] = useState({
         packName: '',
         category: '',
@@ -38,6 +41,8 @@ function DraftIconMainList() {
     useEffect(()=>{
         fetchIconItems();
         fethPackData();
+        fetchCategoryData();
+        fetchStyleData();
     },[])
 
     useEffect(() => {
@@ -91,6 +96,24 @@ function DraftIconMainList() {
         } catch (error) {
             console.log(error);
         }
+    }   
+    const fetchCategoryData = () => {
+        axios.get(getCategory).then((result)=>{
+            if(result.data && result.data.status){
+                setCategoryArr(result.data.data);
+            }
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    const fetchStyleData = () => {
+        axios.get(getStyle).then((result)=>{
+            if(result.data && result.data.status){
+                setStyleArr(result.data.data);
+            }
+        }).catch((error)=>{
+            console.log(error);
+        })
     }
 
     const handleRemoveTag = (data , index, packObj) =>{
@@ -190,9 +213,9 @@ function DraftIconMainList() {
                         <span>Style</span>
                         <select name="style" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" 
                             {...register("style")}>
-                                {styleOption && styleOption.map((styleItem)=>{
+                                {styleArr && styleArr.map((styleItem)=>{
                                     return (
-                                        <option value={styleItem.value}>{styleItem.name}</option>
+                                        <option value={styleItem.styleValue}>{styleItem.styleName}</option>
                                     )
                                 })}
                         </select>
@@ -204,9 +227,9 @@ function DraftIconMainList() {
                         <span>Category</span>
                         <select name="category" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2"
                             {...register("category")}>
-                                {categoryOption && categoryOption.map((styleItem)=>{
+                                {categoryArr && categoryArr.map((styleItem)=>{
                                     return (
-                                        <option value={styleItem.value}>{styleItem.name}</option>
+                                        <option value={styleItem.categoryValue}>{styleItem.categoryName}</option>
                                     )
                                 })}
                         </select>

@@ -1,5 +1,5 @@
-// const host = "http://localhost:5007";
-const host = "https://element-api-eight.vercel.app";
+const host = "http://localhost:5007";
+// const host = "https://element-api-eight.vercel.app";
 
 export const loginRoute = `${host}/api/auth/adminLogin`;
 export const draftIconSave = `${host}/api/icon/addDraftIcon`;
@@ -14,9 +14,9 @@ export const getActiveIcons = `${host}/api/icon/getActiveIcons`;
 export const getCategory = `${host}/api/setting/getCategory`;
 export const createCategory = `${host}/api/setting/addCategory`;
 export const updateCategory = `${host}/api/setting/updateCategory`;
-export const deleteCategory = `${host}/api/setting/updateCategory`;
+export const deleteCategory = `${host}/api/setting/deleteCategory`;
 
 export const getStyle = `${host}/api/setting/getStyle`;
 export const createStyle = `${host}/api/setting/addStyle`;
 export const updateStyle = `${host}/api/setting/updateStyle`;
-export const deleteStyle = `${host}/api/setting/updateStyle`;
+export const deleteStyle = `${host}/api/setting/deleteStyle`;

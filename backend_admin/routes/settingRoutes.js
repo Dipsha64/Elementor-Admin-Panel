@@ -5,11 +5,11 @@ const { getCategory,createCategory, updateCategory,deleteCategory, getStyle,crea
 router.get("/getCategory",getCategory);
 router.post("/addCategory", createCategory);
 router.put("/updateCategory",updateCategory);
-router.delete("/deleteCategory",deleteCategory);
+router.post("/deleteCategory",deleteCategory);
 
 router.get("/getStyle",getStyle);
 router.post("/addStyle", createStyle);
 router.put("/updateStyle", updateStyle);
-router.delete("/deleteStyle",deleteStyle);
+router.post("/deleteStyle",deleteStyle);
 
 module.exports = router;
