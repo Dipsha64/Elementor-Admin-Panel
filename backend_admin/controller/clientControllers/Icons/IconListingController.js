@@ -42,4 +42,33 @@ const getPaginationIcon = async (req,res) => {
     }
 }
 
-module.exports = { getPaginationIcon };
+const getFilterIcon = async (req,res) => {
+    try {
+        const query = req.body.type === "category" ? { 'category._id' : req.body.value._id } : { 'style._id' : req.body.value._id};
+        let iconData = null;
+        iconData = await iconItemsModel.find(query);
+        if(iconData && iconData.length > 0){
+            const iconWithImages = iconData.map(item => {
+                const imagePath = path.join(__dirname, '../../../uploads/icons/', item.iconPathName);
+                let imageData = null;
+                try {
+                    imageData = fs.readFileSync(imagePath, 'utf8');
+                } catch (err) {
+                  console.error(`Error reading image at ${imagePath}`, err);
+                }
+                return {
+                  ...item.toObject(),
+                  imageData: imageData
+                };
+            })
+            res.json({message : "Get Icon Data",data : iconWithImages, status : true});
+        }
+        else{
+            res.json({message : "No Data found for  fildter", status : false});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+module.exports = { getPaginationIcon, getFilterIcon };
