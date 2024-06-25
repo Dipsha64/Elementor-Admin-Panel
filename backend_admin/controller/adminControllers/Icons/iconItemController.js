@@ -53,6 +53,7 @@ const saveDraftIcons = async(req,res) =>{
 const saveActiveIcons = async (req,res) => {
     try {
         const { formData, packId, status, iconData } = req.body;
+        console.log("saveActiveIcons...",formData);
         const updatePackObj = {
             packName : formData.packName,
             slug : formData.packName.trim().toLowerCase().replace(/\s/g,'-'),

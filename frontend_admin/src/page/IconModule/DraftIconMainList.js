@@ -6,8 +6,6 @@ import { getParticularPackIcon, saveActiveIcon, getParticulatpack, getAllKitRout
 import SVG from 'react-inlinesvg';
 import { MdOutlineRemoveCircle } from "react-icons/md";
 import Model from "../../components/Model";
-import styleOption from "../../utils/styleJSON";
-import categoryOption from "../../utils/categoryJSON";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -87,8 +85,8 @@ function DraftIconMainList() {
                     setValue("packName", res.data.data.packName, {
                         shouldValidate: true,
                     });
-                    setValue("style",res.data.data.style);
-                    setValue("category",res.data.data.category);
+                    setValue("style",res.data.data.style.styleName);
+                    setValue("category",res.data.data.category.categoryName);
                     setValue("description",res.data.data.description);
                     // setFormData(res.data.data);
                 }
@@ -147,8 +145,23 @@ function DraftIconMainList() {
         packIconsArr[index].newTagVal = e.target.value;
     }
     const submitIcons = (data, status) => {
-        let kitObj = { _id : selectedItem._id, kitName : selectedItem.kitName }
-        const objData = {...data, kitValue : kitObj};
+        debugger;
+        let kitObj = { _id : selectedItem._id, kitName : selectedItem.kitName };
+        let styleObj = '';
+        let categoryObj = '';
+        if(data.style !== ''){
+            let styleValId = styleArr.findIndex((item)=>{return item.styleName === data.style});
+            if(styleValId > -1){
+                styleObj = styleArr[styleValId];
+            }
+        }
+        if(data.category !== ''){
+            let categoryValId = categoryArr.findIndex((item)=>{return item.categoryName === data.category});
+            if(categoryValId > -1){
+                categoryObj = categoryArr[categoryValId];
+            }
+        }
+        const objData = {...data, kitValue : kitObj, style : styleObj, category : categoryObj};
         axios.post(saveActiveIcon,{packId: packId,formData : objData, iconData : packIconsArr, status : status}).then((res)=>{
             console.log("res...",res);
             toast(`The ${status} icon has been created successfully.`,toastOption);
@@ -165,7 +178,6 @@ function DraftIconMainList() {
           [e.target.name]: e.target.value
         });
     };
-
     return ( 
         <>
         <div className="bg-white px-2">
@@ -211,11 +223,11 @@ function DraftIconMainList() {
                     </div>
                     <div className="grid">
                         <span>Style</span>
-                        <select name="style" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" 
+                        <select name="style" id="style" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2" 
                             {...register("style")}>
                                 {styleArr && styleArr.map((styleItem)=>{
                                     return (
-                                        <option value={styleItem.styleValue}>{styleItem.styleName}</option>
+                                        <option value={styleItem.styleName}>{styleItem.styleName}</option>
                                     )
                                 })}
                         </select>
@@ -225,11 +237,11 @@ function DraftIconMainList() {
                     </div>
                     <div className="grid">
                         <span>Category</span>
-                        <select name="category" id="country" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2"
+                        <select name="category" id="category" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2"
                             {...register("category")}>
                                 {categoryArr && categoryArr.map((styleItem)=>{
                                     return (
-                                        <option value={styleItem.categoryValue}>{styleItem.categoryName}</option>
+                                        <option value={styleItem.categoryName}>{styleItem.categoryName}</option>
                                     )
                                 })}
                         </select>

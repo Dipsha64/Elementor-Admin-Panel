@@ -1,9 +1,8 @@
 import folderAnimation from "../../lotties/folder-animation.json";
 import Lottie from "react-lottie";
 import { useState, useEffect } from "react";
-import { draftIconSave } from "../../utils/APIRoutes";
 import axios from "axios";
-import { getAllDraftPackRoute } from "../../utils/APIRoutes";
+import { getAllDraftPackRoute, draftIconSave } from "../../utils/APIRoutes";
 import SVG from 'react-inlinesvg';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -89,7 +88,7 @@ function UploadIcon() {
     return (
         <>
         <div className="py-20 bg-white px-2">
-            <h3 className="font-bold"> Upload icon </h3>
+            <h3 className="font-bold"> Upload Icon </h3>
             <div className="max-w-md mx-auto rounded-lg overflow-hidden md:max-w-xl">
                 <div className="md:flex">
                     <div className="w-full p-3">

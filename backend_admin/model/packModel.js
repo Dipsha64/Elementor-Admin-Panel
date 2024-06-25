@@ -29,10 +29,10 @@ const packSchema = mongoose.Schema({
         type : Number,
     },
     category : {
-        type : String
+        type : Object
     },
     style : {
-        type : String
+        type : Object
     },
     description : {
         type : String
