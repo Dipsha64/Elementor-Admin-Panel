@@ -85,8 +85,8 @@ function DraftIconMainList() {
                     setValue("packName", res.data.data.packName, {
                         shouldValidate: true,
                     });
-                    setValue("style",res.data.data.style.styleName);
-                    setValue("category",res.data.data.category.categoryName);
+                    setValue("style",res.data.data.style ? res.data.data.style.styleName : '');
+                    setValue("category",res.data.data.category ? res.data.data.category.categoryName : '');
                     setValue("description",res.data.data.description);
                     // setFormData(res.data.data);
                 }
@@ -239,9 +239,9 @@ function DraftIconMainList() {
                         <span>Category</span>
                         <select name="category" id="category" className="leading-6 max-w-72 rounded-lg border-solid border-2 border-indigo-600 px-2.5 py-2"
                             {...register("category")}>
-                                {categoryArr && categoryArr.map((styleItem)=>{
+                                {categoryArr && categoryArr.map((catItem)=>{
                                     return (
-                                        <option value={styleItem.categoryName}>{styleItem.categoryName}</option>
+                                        <option value={catItem.categoryName}>{catItem.categoryName}</option>
                                     )
                                 })}
                         </select>
